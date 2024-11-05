@@ -1,10 +1,26 @@
 const express = require('express');
 var bodyParser = require('body-parser')
-const { createUser, updateUser } = require('./src/users/user');
+const { createUser, updateUser, getUser } = require('./src/users/user');
 
 const app = express();
 
 app.use(bodyParser.json());
+
+app.get('/user/:userId', async (req, res) => {
+    try {
+        var getUserStatus = await getUser(req.params.userId);
+        if (getUserStatus.toString().indexOf('UserId does not exist') < 0 ) {
+            res.status(200).send(getUserStatus);
+        }
+        else {
+            res.status(500).send(getUserStatus);
+        }
+    }
+    catch(err) {
+        res.status(500).send('An error occurred while processing your request. The error is ' + err);
+    }
+});
+
 
 app.post('/user', async (req, res) => {
     try {

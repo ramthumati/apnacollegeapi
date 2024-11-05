@@ -13,6 +13,24 @@ const userSchema = new mongoose.Schema({
 mongoose.connect(configJson.databaseUrl, { useNewUrlParser: true })
     .catch((err) => { throw err });
 
+
+
+const getUser = async (userId) => {
+    userId = userId.toLowerCase();
+
+    const User = mongoose.model('User', userSchema);
+
+    const existingUser = await User.find({
+        userId: userId
+    });
+
+    if (existingUser.length === 0) {
+        return "UserId does not exist!.....";
+    }
+
+    return existingUser;
+}
+
 const createUser = async (userId, firstName, lastName, role, active) => {
     userId = userId.toLowerCase();
 
@@ -74,5 +92,5 @@ const updateUser = async (userId, firstName, lastName, role, active) => {
     return "Successfully updated the user!.....";
 }
 
-module.exports = { createUser, updateUser };
+module.exports = { createUser, updateUser, getUser };
 
