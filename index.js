@@ -24,11 +24,16 @@ app.post('/user', async (req, res) => {
 app.put('/user', async (req, res) => {
     try {
         var updateUserStatus = await updateUser(req.body.userId, req.body.firstName, req.body.lastName, req.body.role, req.body.active);
-        res.status(200).send('Successfully updated the user!.....');
+        if (updateUserStatus.toString().indexOf('UserId not found') < 0 ) {
+            res.status(200).send('Successfully updated the user!.....');
+        }
+        else {
+            res.status(500).send(updateUserStatus);
+        }  
     }
     catch(err) {
         res.status(500).send('An error occurred while processing your request. The error is ' + err);
-    }    
+    } 
 })
 
 app.listen(5000, () => {

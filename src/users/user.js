@@ -53,10 +53,8 @@ const updateUser = async (userId, firstName, lastName, role, active) => {
         userId: userId
     });
 
-    console.log('existingUser', existingUser);
-
-    if (existingUser.length == 0) {
-        return "UserId not found!....."
+    if (existingUser.length === 0) {
+        return "UserId not found!.....";
     }
 
     existingUser = existingUser[0];
