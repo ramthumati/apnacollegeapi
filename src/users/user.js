@@ -32,7 +32,6 @@ const createUser = async (userId, firstName, lastName, role, active) => {
 
     if (existingUser.length > 0) {
         return "UserId already exists!.....";
-        //throw Error('UserId already exists!.....');
     }
 
     user.save(function(err) {
@@ -45,5 +44,37 @@ const createUser = async (userId, firstName, lastName, role, active) => {
     return "Successfully created the user!.....";
 }
 
-module.exports.createUser = createUser;
+const updateUser = async (userId, firstName, lastName, role, active) => {
+    userId = userId.toLowerCase();
+
+    const User = mongoose.model('User', userSchema);
+
+    var existingUser = await User.find({
+        userId: userId
+    });
+
+    console.log('existingUser', existingUser);
+
+    if (existingUser.length == 0) {
+        return "UserId not found!....."
+    }
+
+    existingUser = existingUser[0];
+
+    existingUser.firstName = firstName;
+    existingUser.lastName = lastName;
+    existingUser.role = role;
+    existingUser.active = active;
+
+    await existingUser.save(function(err) {
+        if(err) {
+            console.log(err);
+            return;
+        }
+    });
+
+    return "Successfully updated the user!.....";
+}
+
+module.exports = { createUser, updateUser };
 
