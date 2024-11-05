@@ -24,7 +24,7 @@ app.get('/user/:userId', async (req, res) => {
 
 app.post('/user', async (req, res) => {
     try {
-        var createUserStatus = await createUser(req.body.userId, req.body.firstName, req.body.lastName, req.body.role, req.body.active);
+        var createUserStatus = await createUser(req.body.userId, req.body.password, req.body.firstName, req.body.lastName, req.body.role, req.body.active);
         if (createUserStatus.toString().indexOf('UserId already exists') < 0 ) {
             res.status(200).send('Successfully created the user!.....');
         }
@@ -39,7 +39,7 @@ app.post('/user', async (req, res) => {
 
 app.put('/user', async (req, res) => {
     try {
-        var updateUserStatus = await updateUser(req.body.userId, req.body.firstName, req.body.lastName, req.body.role, req.body.active);
+        var updateUserStatus = await updateUser(req.body.userId, req.body.password, req.body.firstName, req.body.lastName, req.body.role, req.body.active);
         if (updateUserStatus.toString().indexOf('UserId not found') < 0 ) {
             res.status(200).send('Successfully updated the user!.....');
         }

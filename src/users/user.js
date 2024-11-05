@@ -3,6 +3,7 @@ const configJson = require('../common/config.json');
 
 const userSchema = new mongoose.Schema({
     userId: String,
+    password: String,
     firstName: String,
     lastName: String,
     role: String,
@@ -20,7 +21,7 @@ const getUser = async (userId) => {
 
     const User = mongoose.model('User', userSchema);
 
-    const existingUser = await User.find({
+    var existingUser = await User.find({
         userId: userId
     });
 
@@ -28,23 +29,26 @@ const getUser = async (userId) => {
         return "UserId does not exist!.....";
     }
 
+    existingUser = existingUser[0];
+    existingUser.password = '';
     return existingUser;
 }
 
-const createUser = async (userId, firstName, lastName, role, active) => {
+const createUser = async (userId, password, firstName, lastName, role, active) => {
     userId = userId.toLowerCase();
 
     const User = mongoose.model('User', userSchema);
 
     const user = new User({
         userId: userId,
+        password: password,
         firstName: firstName,
         lastName: lastName,
         role: role,
         active: active
     });
 
-    const existingUser = await User.find({
+    var existingUser = await User.find({
         userId: userId
     });
 
@@ -62,7 +66,7 @@ const createUser = async (userId, firstName, lastName, role, active) => {
     return "Successfully created the user!.....";
 }
 
-const updateUser = async (userId, firstName, lastName, role, active) => {
+const updateUser = async (userId, password, firstName, lastName, role, active) => {
     userId = userId.toLowerCase();
 
     const User = mongoose.model('User', userSchema);
@@ -77,6 +81,7 @@ const updateUser = async (userId, firstName, lastName, role, active) => {
 
     existingUser = existingUser[0];
 
+    existingUser.password = password;
     existingUser.firstName = firstName;
     existingUser.lastName = lastName;
     existingUser.role = role;
