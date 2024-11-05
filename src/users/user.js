@@ -92,5 +92,30 @@ const updateUser = async (userId, firstName, lastName, role, active) => {
     return "Successfully updated the user!.....";
 }
 
-module.exports = { createUser, updateUser, getUser };
+const deleteUser = async (userId) => {
+    userId = userId.toLowerCase();
+
+    const User = mongoose.model('User', userSchema);
+
+    var existingUser = await User.find({
+        userId: userId
+    });
+
+    if (existingUser.length === 0) {
+        return "UserId not found!.....";
+    }
+
+    existingUser = existingUser[0];
+
+    await existingUser.deleteOne(function(err) {
+        if(err) {
+            console.log(err);
+            return;
+        }
+    });
+
+    return "Successfully deleted the user!.....";
+}
+
+module.exports = { createUser, updateUser, getUser, deleteUser };
 

@@ -1,6 +1,6 @@
 const express = require('express');
 var bodyParser = require('body-parser')
-const { createUser, updateUser, getUser } = require('./src/users/user');
+const { createUser, updateUser, getUser, deleteUser } = require('./src/users/user');
 
 const app = express();
 
@@ -45,6 +45,21 @@ app.put('/user', async (req, res) => {
         }
         else {
             res.status(500).send(updateUserStatus);
+        }  
+    }
+    catch(err) {
+        res.status(500).send('An error occurred while processing your request. The error is ' + err);
+    } 
+})
+
+app.delete('/user', async (req, res) => {
+    try {
+        var deleteUserStatus = await deleteUser(req.body.userId);
+        if (deleteUserStatus.toString().indexOf('UserId not found') < 0 ) {
+            res.status(200).send('Successfully deleted the user!.....' + deleteUserStatus);
+        }
+        else {
+            res.status(500).send(deleteUserStatus);
         }  
     }
     catch(err) {
