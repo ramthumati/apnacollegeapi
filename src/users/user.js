@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
 });
 
 mongoose.connect(configJson.databaseUrl, { useNewUrlParser: true })
-    .catch((err) => console.log(err));
+    .catch((err) => { throw err });
 
 const createUser = async (userId, firstName, lastName, role, active) => {
     userId = userId.toLowerCase();
@@ -30,10 +30,9 @@ const createUser = async (userId, firstName, lastName, role, active) => {
         userId: userId
     });
 
-    console.log(existingUser);
     if (existingUser.length > 0) {
-        console.log('UserId already exists!.....', existingUser);
-        return;
+        return "UserId already exists!.....";
+        //throw Error('UserId already exists!.....');
     }
 
     user.save(function(err) {
@@ -41,9 +40,9 @@ const createUser = async (userId, firstName, lastName, role, active) => {
             console.log(err);
             return;
         }
-    });    
-    
-    console.log(3);
+    });
+
+    return "Successfully created the user!.....";
 }
 
 module.exports.createUser = createUser;
