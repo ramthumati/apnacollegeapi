@@ -2,6 +2,7 @@ const express = require('express');
 var bodyParser = require('body-parser')
 const { createUser, updateUser, getUser, deleteUser } = require('./src/users/user');
 const { getDsaTopic, createDsaTopic, updateDsaTopic, deleteDsaTopic } = require('./src/dsa/dsatopics');
+const { getDsaProblem, createDsaProblem, updateDsaProblem, deleteDsaProblem } = require('./src/dsa/dsaProblems');
 
 const app = express();
 
@@ -140,6 +141,72 @@ app.delete('/dsaTopic', async (req, res) => {
         res.status(500).send('An error occurred while processing your request. The error is ' + err);
     } 
 })
+
+
+
+
+/* DsaProblems */
+app.get('/dsaProblem/:dsaTopicName/:dsaProblemName', async (req, res) => {
+    try {
+        var getDsaProblemStatus = await getDsaProblem(req.params.dsaTopicName, req.params.dsaProblemName);
+        if (getDsaProblemStatus.toString().indexOf('Dsa Problem does not exist') < 0 ) {
+            res.status(200).send(getDsaProblemStatus);
+        }
+        else {
+            res.status(500).send(getDsaProblemStatus);
+        }
+    }
+    catch(err) {
+        res.status(500).send('An error occurred while processing your request. The error is ' + err);
+    }
+});
+
+
+app.post('/dsaProblem', async (req, res) => {
+    try {
+        var createDsaProblemStatus = await createDsaProblem(req.body.topicName, req.body.problemName);
+        if (createDsaProblemStatus.toString().indexOf('Dsa problem already exists') < 0 ) {
+            res.status(200).send('Successfully created the Dsa Problem!.....');
+        }
+        else {
+            res.status(500).send(createDsaProblemStatus);
+        }
+    }
+    catch(err) {
+        res.status(500).send('An error occurred while processing your request. The error is ' + err);
+    }
+});
+
+app.put('/dsaProblem', async (req, res) => {
+    try {
+        var updateDsaProblemStatus = await updateDsaProblem(req.body.topicName, req.body.problemName);
+        if (updateDsaProblemStatus.toString().indexOf('Problem Name not found') < 0 ) {
+            res.status(200).send('Successfully updated the Problem Name!.....');
+        }
+        else {
+            res.status(500).send(updateDsaProblemStatus);
+        }  
+    }
+    catch(err) {
+        res.status(500).send('An error occurred while processing your request. The error is ' + err);
+    } 
+})
+
+app.delete('/dsaProblem', async (req, res) => {
+    try {
+        var deleteDsaProblemStatus = await deleteDsaProblem(req.body.topicName, req.body.problemName);
+        if (deleteDsaProblemStatus.toString().indexOf('Problem not found') < 0 ) {
+            res.status(200).send('Successfully deleted the Dsa Problem!.....' + deleteDsaProblemStatus);
+        }
+        else {
+            res.status(500).send(deleteDsaProblemStatus);
+        }  
+    }
+    catch(err) {
+        res.status(500).send('An error occurred while processing your request. The error is ' + err);
+    } 
+})
+
 
 app.listen(5000, () => {
     console.log('Listening on port 5000!.....');
