@@ -8,6 +8,7 @@ const dsaProblemSchema = new mongoose.Schema({
     leetCodeLink: String,
     articleLink: String,
     level: String,
+    users: String,
     createdDate: { type: Date, default: Date.now }
 });
 
@@ -15,6 +16,18 @@ mongoose.connect(configJson.databaseUrl, { useNewUrlParser: true })
     .catch((err) => { throw err });
 
 
+
+const getDsaProblems = async () => {
+    const DsaProblem = mongoose.model('DsaProblem', dsaProblemSchema);
+
+    var existingDsaProblems = await DsaProblem.find();
+
+    if (existingDsaProblems.length === 0) {
+        return "Dsa Problem does not exist!.....";
+    }
+
+    return existingDsaProblems;
+}
 
 const getDsaProblem = async (topicName, problemName) => {
     problemName = problemName.toLowerCase();
@@ -34,6 +47,7 @@ const getDsaProblem = async (topicName, problemName) => {
     return existingDsaProblem;
 }
 
+
 const createDsaProblem = async (topicName, problemName, youTubeLink, leetCodeLink, articleLink, level) => {
     problemName = problemName.toLowerCase();
 
@@ -45,7 +59,8 @@ const createDsaProblem = async (topicName, problemName, youTubeLink, leetCodeLin
         youTubeLink: youTubeLink, 
         leetCodeLink: leetCodeLink, 
         articleLink: articleLink,
-        level: level
+        level: level,
+        users: ""
     });
 
     var existingDsaProblem = await DsaProblem.find({
@@ -88,6 +103,7 @@ const updateDsaProblem = async (topicName, problemName, youTubeLink, leetCodeLin
     existingDsaProblem.leetCodeLink = leetCodeLink;
     existingDsaProblem.articleLink = articleLink;
     existingDsaProblem.level = level;
+    //existingDsaProblem.users = "";
 
     await existingDsaProblem.save(function(err) {
         if(err) {
@@ -125,5 +141,5 @@ const deleteDsaProblem = async (topicName, problemName) => {
     return "Successfully deleted the problem name!.....";
 }
 
-module.exports = { createDsaProblem, updateDsaProblem, getDsaProblem, deleteDsaProblem };
+module.exports = { createDsaProblem, updateDsaProblem, getDsaProblem, getDsaProblems, deleteDsaProblem };
 

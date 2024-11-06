@@ -2,7 +2,7 @@ const express = require('express');
 var bodyParser = require('body-parser')
 const { createUser, updateUser, getUser, deleteUser } = require('./src/users/user');
 const { getDsaTopic, getDsaTopicsAll, createDsaTopic, updateDsaTopic, deleteDsaTopic } = require('./src/dsa/dsatopics');
-const { getDsaProblem, createDsaProblem, updateDsaProblem, deleteDsaProblem } = require('./src/dsa/dsaProblems');
+const { getDsaProblem, getDsaProblems, createDsaProblem, updateDsaProblem, deleteDsaProblem } = require('./src/dsa/dsaProblems');
 
 const app = express();
 
@@ -160,6 +160,21 @@ app.delete('/dsaTopic', async (req, res) => {
 
 
 /* DsaProblems */
+app.get('/dsaProblems', async (req, res) => {
+    try {
+        var getDsaProblemStatus = await getDsaProblems();
+        if (getDsaProblemStatus.toString().indexOf('Dsa Problem does not exist') < 0 ) {
+            res.status(200).send(getDsaProblemStatus);
+        }
+        else {
+            res.status(500).send(getDsaProblemStatus);
+        }
+    }
+    catch(err) {
+        res.status(500).send('An error occurred while processing your request. The error is ' + err);
+    }
+});
+
 app.get('/dsaProblem/:dsaTopicName/:dsaProblemName', async (req, res) => {
     try {
         var getDsaProblemStatus = await getDsaProblem(req.params.dsaTopicName, req.params.dsaProblemName);
