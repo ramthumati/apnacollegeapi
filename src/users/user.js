@@ -30,7 +30,6 @@ const getUser = async (userId) => {
     }
 
     existingUser = existingUser[0];
-    existingUser.password = '';
     return existingUser;
 }
 

@@ -1,10 +1,22 @@
 const express = require('express');
 var bodyParser = require('body-parser')
 const { createUser, updateUser, getUser, deleteUser } = require('./src/users/user');
+const { getDsaTopic, createDsaTopic, updateDsaTopic, deleteDsaTopic } = require('./src/dsa/dsatopics');
 
 const app = express();
 
 app.use(bodyParser.json());
+
+var cors = require("cors");
+const { fromOptions } = require('mongodb/lib/write_concern');
+
+const corsOptions = {
+    origin:'*', 
+    credentials:true,            //access-control-allow-credentials:true
+    optionSuccessStatus:200,
+ }
+ 
+app.use(cors(corsOptions))
 
 app.get('/user/:userId', async (req, res) => {
     try {
@@ -60,6 +72,68 @@ app.delete('/user', async (req, res) => {
         }
         else {
             res.status(500).send(deleteUserStatus);
+        }  
+    }
+    catch(err) {
+        res.status(500).send('An error occurred while processing your request. The error is ' + err);
+    } 
+})
+
+/* DsaTopics */
+app.get('/dsaTopic/:dsaTopicName', async (req, res) => {
+    try {
+        var getDsaTopicStatus = await getDsaTopic(req.params.dsaTopicName);
+        if (getDsaTopicStatus.toString().indexOf('Dsa Topic does not exist') < 0 ) {
+            res.status(200).send(getDsaTopicStatus);
+        }
+        else {
+            res.status(500).send(getDsaTopicStatus);
+        }
+    }
+    catch(err) {
+        res.status(500).send('An error occurred while processing your request. The error is ' + err);
+    }
+});
+
+
+app.post('/dsaTopic', async (req, res) => {
+    try {
+        var createDsaTopicStatus = await createDsaTopic(req.body.topicName);
+        if (createDsaTopicStatus.toString().indexOf('Dsa Topic already exists') < 0 ) {
+            res.status(200).send('Successfully created the Dsa Topic!.....');
+        }
+        else {
+            res.status(500).send(createDsaTopicStatus);
+        }
+    }
+    catch(err) {
+        res.status(500).send('An error occurred while processing your request. The error is ' + err);
+    }
+});
+
+app.put('/dsaTopic', async (req, res) => {
+    try {
+        var updateDsaTopicStatus = await updateDsaTopic(req.body.topicName);
+        if (updateDsaTopicStatus.toString().indexOf('Topic Name not found') < 0 ) {
+            res.status(200).send('Successfully updated the Topic Name!.....');
+        }
+        else {
+            res.status(500).send(updateDsaTopicStatus);
+        }  
+    }
+    catch(err) {
+        res.status(500).send('An error occurred while processing your request. The error is ' + err);
+    } 
+})
+
+app.delete('/dsaTopic', async (req, res) => {
+    try {
+        var deleteDsaTopicStatus = await deleteDsaTopic(req.body.topicName);
+        if (deleteDsaTopicStatus.toString().indexOf('Dsa Topic not found') < 0 ) {
+            res.status(200).send('Successfully deleted the Dsa Topic!.....' + deleteDsaTopicStatus);
+        }
+        else {
+            res.status(500).send(deleteDsaTopicStatus);
         }  
     }
     catch(err) {
