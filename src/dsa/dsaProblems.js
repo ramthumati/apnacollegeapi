@@ -82,7 +82,7 @@ const createDsaProblem = async (topicName, problemName, youTubeLink, leetCodeLin
     return "Successfully created the Dsa Problem!.....";
 }
 
-const updateDsaProblem = async (topicName, problemName, youTubeLink, leetCodeLink, articleLink, level) => {
+const updateDsaProblem = async (topicName, problemName, youTubeLink, leetCodeLink, articleLink, level, users="") => {
     problemName = problemName.toLowerCase();
 
     const DsaProblem = mongoose.model('DsaProblem', dsaProblemSchema);
@@ -92,9 +92,9 @@ const updateDsaProblem = async (topicName, problemName, youTubeLink, leetCodeLin
         problemName: problemName
     });
 
-    if (existingDsaProblem.length === 0) {
-        return "Problem Name not found!.....";
-    }
+    // if (existingDsaProblem.length === 0) {
+    //     return "Problem Name not found!.....";
+    // }
 
     existingDsaProblem = existingDsaProblem[0];
 
@@ -103,7 +103,7 @@ const updateDsaProblem = async (topicName, problemName, youTubeLink, leetCodeLin
     existingDsaProblem.leetCodeLink = leetCodeLink;
     existingDsaProblem.articleLink = articleLink;
     existingDsaProblem.level = level;
-    //existingDsaProblem.users = "";
+    existingDsaProblem.users = users;//existingDsaProblem.users + ',' + users;
 
     await existingDsaProblem.save(function(err) {
         if(err) {

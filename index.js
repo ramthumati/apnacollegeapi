@@ -208,7 +208,7 @@ app.post('/dsaProblem', async (req, res) => {
 
 app.put('/dsaProblem', async (req, res) => {
     try {
-        var updateDsaProblemStatus = await updateDsaProblem(req.body.topicName, req.body.problemName);
+        var updateDsaProblemStatus = await updateDsaProblem(req.body.topicName, req.body.problemName, req.body.youTubeLink, req.body.leetCodeLink, req.body.articleLink, req.body.level, req.body.users);
         if (updateDsaProblemStatus.toString().indexOf('Problem Name not found') < 0 ) {
             res.status(200).send('Successfully updated the Problem Name!.....');
         }
