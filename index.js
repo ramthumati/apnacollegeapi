@@ -178,7 +178,7 @@ app.get('/dsaProblem/:dsaTopicName/:dsaProblemName', async (req, res) => {
 
 app.post('/dsaProblem', async (req, res) => {
     try {
-        var createDsaProblemStatus = await createDsaProblem(req.body.topicName, req.body.problemName);
+        var createDsaProblemStatus = await createDsaProblem(req.body.topicName, req.body.problemName, req.body.youTubeLink, req.body.leetCodeLink, req.body.articleLink, req.body.level);
         if (createDsaProblemStatus.toString().indexOf('Dsa problem already exists') < 0 ) {
             res.status(200).send('Successfully created the Dsa Problem!.....');
         }

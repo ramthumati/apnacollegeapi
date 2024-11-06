@@ -4,6 +4,10 @@ const configJson = require('../common/config.json');
 const dsaProblemSchema = new mongoose.Schema({
     topicName: String,
     problemName: String,
+    youTubeLink: String,
+    leetCodeLink: String,
+    articleLink: String,
+    level: String,
     createdDate: { type: Date, default: Date.now }
 });
 
@@ -30,7 +34,7 @@ const getDsaProblem = async (topicName, problemName) => {
     return existingDsaProblem;
 }
 
-const createDsaProblem = async (topicName, problemName) => {
+const createDsaProblem = async (topicName, problemName, youTubeLink, leetCodeLink, articleLink, level) => {
     problemName = problemName.toLowerCase();
 
     const DsaProblem = mongoose.model('DsaProblem', dsaProblemSchema);
@@ -38,6 +42,10 @@ const createDsaProblem = async (topicName, problemName) => {
     const dsaProblem = new DsaProblem({
         topicName: topicName,
         problemName: problemName,
+        youTubeLink: youTubeLink, 
+        leetCodeLink: leetCodeLink, 
+        articleLink: articleLink,
+        level: level
     });
 
     var existingDsaProblem = await DsaProblem.find({
@@ -59,7 +67,7 @@ const createDsaProblem = async (topicName, problemName) => {
     return "Successfully created the Dsa Problem!.....";
 }
 
-const updateDsaProblem = async (topicName, problemName) => {
+const updateDsaProblem = async (topicName, problemName, youTubeLink, leetCodeLink, articleLink, level) => {
     problemName = problemName.toLowerCase();
 
     const DsaProblem = mongoose.model('DsaProblem', dsaProblemSchema);
@@ -76,6 +84,10 @@ const updateDsaProblem = async (topicName, problemName) => {
     existingDsaProblem = existingDsaProblem[0];
 
     existingDsaProblem.problemName = problemName;
+    existingDsaProblem.youTubeLink = youTubeLink;
+    existingDsaProblem.leetCodeLink = leetCodeLink;
+    existingDsaProblem.articleLink = articleLink;
+    existingDsaProblem.level = level;
 
     await existingDsaProblem.save(function(err) {
         if(err) {
