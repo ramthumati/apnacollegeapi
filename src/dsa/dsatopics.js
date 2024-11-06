@@ -10,6 +10,18 @@ mongoose.connect(configJson.databaseUrl, { useNewUrlParser: true })
     .catch((err) => { throw err });
 
 
+const getDsaTopicsAll = async () => {
+    const DsaTopic = mongoose.model('DsaTopic', dsaTopicSchema);
+
+    var existingDsaTopic = await DsaTopic.find();
+
+    if (existingDsaTopic.length === 0) {
+        return "Dsa Topic does not exist!.....";
+    }
+
+    //existingDsaTopic = existingDsaTopic[0];
+    return existingDsaTopic;
+}
 
 const getDsaTopic = async (topicName) => {
     topicName = topicName.toLowerCase();
@@ -107,5 +119,5 @@ const deleteDsaTopic = async (topicName) => {
     return "Successfully deleted the topic name!.....";
 }
 
-module.exports = { createDsaTopic, updateDsaTopic, getDsaTopic, deleteDsaTopic };
+module.exports = { createDsaTopic, updateDsaTopic, getDsaTopic, getDsaTopicsAll, deleteDsaTopic };
 
